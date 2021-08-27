@@ -13,9 +13,7 @@ const RamdomChoise = () => {
 
 		setNumAlt(-1)
 
-		const textSplited = text.split(',')
-
-		const textList = textSplited.map(word =>
+		const textList = text.split(',').map(word =>
 			word.split(' ')
 				.filter(w => w !== '')
 				.join(' ')
@@ -35,14 +33,8 @@ const RamdomChoise = () => {
 
 			const timer = setInterval(() => {
 
-				setNumAlt((estadoActual) => {
-					let alt = generateNumAlt()
-					while (alt === estadoActual) alt = generateNumAlt()
-					return alt
-				})
-
+				setNumAlt((estadoActual) => generateNumAlt(estadoActual))
 				count++
-
 				if (count === optionList.length * 4) clearInterval(timer)
 
 			}, 150)
@@ -50,9 +42,15 @@ const RamdomChoise = () => {
 		}
 	}, [isEnterDown])
 
-	const generateNumAlt = () => {
+	const generateNumAlt = (beforeValue) => {
+
 		const numOptions = optionList.length - 1
-		return Math.round(Math.random() * numOptions)
+		const numRand = Math.round(Math.random() * numOptions)
+
+		return numRand === beforeValue
+			? generateNumAlt(beforeValue)
+			: numRand
+
 	}
 
 	return <div className="container">
